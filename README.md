@@ -1,2 +1,2 @@
 # Love-is-Blind
-We are working on our game!!
+Lets work on our game and make it the best we can!!
