@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -11,15 +12,16 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameIsPaused)
-            {
-                Resume();
-            } else
+            if (!GameIsPaused)
             {
                 Pause();
+            } else
+            {
+                Resume();
             }
         }
     }
+
 
     void Resume()
     {
