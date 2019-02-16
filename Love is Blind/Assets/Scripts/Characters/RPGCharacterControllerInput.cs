@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 
 [RequireComponent(typeof(RPGCharacterController))]
 public class RPGCharacterControllerInput : MonoBehaviour
