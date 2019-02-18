@@ -4,6 +4,7 @@
 public class PlayerInput : MonoBehaviour
 {
     public KeyCode switchCharacterKey;
+    public KeyCode characterRunboostKey;
 
     private Player _target;
 
@@ -17,6 +18,11 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(switchCharacterKey))
         {
             _target.SwitchCharacter();
+        }
+
+        if (Input.GetKeyDown(characterRunboostKey))
+        {
+            _target.ActiveRunBoost();
         }
     }
 }

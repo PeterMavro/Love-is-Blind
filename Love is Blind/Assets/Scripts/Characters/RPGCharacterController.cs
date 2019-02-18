@@ -1,13 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(RPGCharacterControllerInput))]
 // AI
 public class RPGCharacterController : MonoBehaviour
 {
-    public float speed = 5;
+    public float initSpeed = 5;
+
+    private float _speed;
 
     private CharacterController _controller;
     private RPGCharacterControllerInput _input;
@@ -18,13 +18,23 @@ public class RPGCharacterController : MonoBehaviour
         _input = GetComponent<RPGCharacterControllerInput>();
     }
 
-    public void Move(Vector3 dir)
+    private void Start()
     {
-        _controller.SimpleMove(speed * dir);
+        _speed = initSpeed;
     }
 
-    public void SetActiveInput(bool active)
+    public void Move(Vector3 dir)
+    {
+        _controller.SimpleMove(_speed * dir);
+    }
+
+    public void SetInputActive(bool active)
     {
         _input.enabled = active;
+    }
+
+    public void SetActiveRunBoost(bool active, float multiplier = 1f)
+    {
+        _speed = active ? _speed * multiplier : initSpeed;
     }
 }

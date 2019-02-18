@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Player : MonoBehaviour
 {
@@ -6,36 +7,30 @@ public class Player : MonoBehaviour
     [Tooltip("Keep as: First: BlindBoy. Second: DeafGirl")]
     public Character[] characters;
     public CameraController cameraController;
-    [Space]
-    public float characterSwitchCooldown;
-    [Space]
-    public GameObject[] collectedItems;
-    public int score;
-    [Space]
-    public UnityEvents.Floatx2UnityEvent OnCharacterSwitchCdSetup;
-    public UnityEvents.FloatUnityEvent OnCharacterSwitchCdUpdated;
 
     private int _selectedCharacterIdx = 0;
-    private float _characterSwitchCdTimer;
+
+    private CharacterSwitchComponent _characterSwitchComponent;
+    private CharacterRunBoostComponent _characterRunBoostComponent;
+
+    private void Awake()
+    {
+        _characterSwitchComponent = GetComponent<CharacterSwitchComponent>();
+        _characterRunBoostComponent = GetComponent<CharacterRunBoostComponent>();
+    }
 
     private void Start()
     {
         _selectedCharacterIdx = (selectedCharacterAtStart == 0 ? 1 : 0);
 
         SwitchCharacter();
-
-        OnCharacterSwitchCdSetup?.Invoke(0, characterSwitchCooldown);
     }
 
     private void Update()
     {
-        if (_characterSwitchCdTimer > 0)
-        {
-            _characterSwitchCdTimer -= Time.deltaTime;
-            _characterSwitchCdTimer = _characterSwitchCdTimer < 0 ? 0 : _characterSwitchCdTimer;
+        _characterSwitchComponent.OnUpdate(Time.deltaTime);
 
-            OnCharacterSwitchCdUpdated?.Invoke(_characterSwitchCdTimer);
-        }
+        _characterRunBoostComponent.OnUpdate(Time.deltaTime);
     }
 
     /// <summary>
@@ -43,9 +38,9 @@ public class Player : MonoBehaviour
     /// </summary>
     public void SwitchCharacter()
     {
-        if (_characterSwitchCdTimer > 0) return;
+        if (_characterSwitchComponent.Cooldown > 0) return;
 
-        _characterSwitchCdTimer = characterSwitchCooldown;
+        _characterSwitchComponent.Reset();
 
         if (characters.ValidIndex(_selectedCharacterIdx))
             DeselectCharacter();
@@ -75,9 +70,29 @@ public class Player : MonoBehaviour
         cameraController.target = characters[_selectedCharacterIdx].transform;
     }
 
+    public void ActiveRunBoost()
+    {
+        if (_characterRunBoostComponent.Cooldown > 0) return;
+
+        _characterRunBoostComponent.Reset();
+
+        for (int i = 0; i < characters.Length; i++)
+        {
+            characters[i].ActiveRunBoost(_characterRunBoostComponent.boostMultiplier);
+        }
+    }
+
+    public void DesactiveRunBoost()
+    {
+        for (int i = 0; i < characters.Length; i++)
+        {
+            characters[i].DesactiveRunBoost();
+        }
+    }
+
     public enum CharacterType
     {
-        BlindMan = 0,
-        DeafWoman = 1
+        BlindBoy = 0,
+        DeafGirl = 1
     }
 }
