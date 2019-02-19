@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public class HealthComponent
 {
@@ -22,6 +23,8 @@ public class HealthComponent
 
         if (_health > _maxHealth) _health = _maxHealth;
 
+        Debug.Log($"Health: {_health}");
+
         OnHealthChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -30,6 +33,8 @@ public class HealthComponent
         _health -= amount;
 
         if (_health < 0) _health = 0;
+
+        Debug.Log($"Health: {_health}");
 
         OnHealthChanged?.Invoke(this, EventArgs.Empty);
     }

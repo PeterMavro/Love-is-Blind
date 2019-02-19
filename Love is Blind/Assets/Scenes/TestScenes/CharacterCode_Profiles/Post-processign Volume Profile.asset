@@ -32,7 +32,7 @@ MonoBehaviour:
     value: 1
   mode:
     overrideState: 1
-    value: 0
+    value: 1
   color:
     overrideState: 1
     value: {r: 1, g: 0, b: 0, a: 1}
@@ -50,7 +50,7 @@ MonoBehaviour:
     value: 1
   rounded:
     overrideState: 1
-    value: 1
+    value: 0
   mask:
     overrideState: 1
     value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}

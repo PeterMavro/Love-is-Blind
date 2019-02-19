@@ -3,8 +3,8 @@
 [RequireComponent(typeof(Player))]
 public class PlayerInput : MonoBehaviour
 {
-    public KeyCode switchCharacterKey;
-    public KeyCode characterRunboostKey;
+    public string switchCharacterButton = "Switch";
+    public string characterRunboostButton = "RunBoost";
 
     private Player _target;
 
@@ -15,12 +15,12 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(switchCharacterKey))
+        if (Input.GetButtonDown(switchCharacterButton))
         {
             _target.SwitchCharacter();
         }
 
-        if (Input.GetKeyDown(characterRunboostKey))
+        if (Input.GetButtonDown(characterRunboostButton))
         {
             _target.ActiveRunBoost();
         }

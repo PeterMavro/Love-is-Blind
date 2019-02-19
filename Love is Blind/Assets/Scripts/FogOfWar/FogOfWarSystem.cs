@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FogOfWarSystem : MonoBehaviour
 {
@@ -13,16 +11,20 @@ public class FogOfWarSystem : MonoBehaviour
     public float blurMultiplier = 1f;
     public Color fogColor;
 
-	private float RadiusSqr { get { return radius*radius; }}
+	private float RadiusSqr { get { return radius * radius; }}
 	
 	private Mesh _mesh;
 	private Vector3[] _vertices;
 	private Color[] _colors;
     private Transform _catchedTransform;
+    private Material _fogOfWarPlaneMat;
+    private int _fogColorShaderParamId;
 
     private void Awake()
     {
         _catchedTransform = transform;
+
+        _fogOfWarPlaneMat = fogOfWarPlane.GetComponent<Renderer>().material;
     }
 
     private void Start ()
@@ -63,10 +65,17 @@ public class FogOfWarSystem : MonoBehaviour
 		for (int i=0; i < _colors.Length; i++)
 			_colors[i] = fogColor;
 
-		UpdateColor();
+        CalculateShaderPropertyIds();
+
+        UpdateColor();
 	}
-	
-	private void UpdateColor()
+
+    private void CalculateShaderPropertyIds()
+    {
+        _fogColorShaderParamId = Shader.PropertyToID("_TintColor");
+    }
+
+    private void UpdateColor()
     {
 		_mesh.colors = _colors;
 	}
@@ -76,5 +85,17 @@ public class FogOfWarSystem : MonoBehaviour
         fogOfWarPlane.gameObject.SetActive(active);
 
         enabled = active;
+    }
+
+    public void SetFogColor(Color color)
+    {
+        fogColor = color;
+
+        SetFogOfWarMatColor(color);
+    }
+
+    private void SetFogOfWarMatColor(Color color)
+    {
+        _fogOfWarPlaneMat.SetColor(_fogColorShaderParamId, color);
     }
 }

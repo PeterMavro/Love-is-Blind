@@ -2,7 +2,7 @@
 
 public class CooldownComponent : MonoBehaviour
 {
-    [Range(0, 10f)]
+    [Range(0.1f, 10f)]
     public float initCooldown;
     public UnityEvents.FloatUnityEvent OnCooldownUpdated;
 
@@ -29,7 +29,7 @@ public class CooldownComponent : MonoBehaviour
         OnCooldownUpdated?.Invoke(CooldownPercentage);
     }
 
-    public virtual void Reset()
+    public virtual void DoReset()
     {
         m_cooldown = initCooldown;
     }

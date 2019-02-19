@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     {
         _selectedCharacterIdx = (selectedCharacterAtStart == 0 ? 1 : 0);
 
+        /* Switch to the selected character (generates SwitchCharacter cooldown) */
         SwitchCharacter();
     }
 
@@ -40,7 +41,7 @@ public class Player : MonoBehaviour
     {
         if (_characterSwitchComponent.Cooldown > 0) return;
 
-        _characterSwitchComponent.Reset();
+        _characterSwitchComponent.DoReset();
 
         if (characters.ValidIndex(_selectedCharacterIdx))
             DeselectCharacter();
@@ -74,7 +75,7 @@ public class Player : MonoBehaviour
     {
         if (_characterRunBoostComponent.Cooldown > 0) return;
 
-        _characterRunBoostComponent.Reset();
+        _characterRunBoostComponent.DoReset();
 
         for (int i = 0; i < characters.Length; i++)
         {

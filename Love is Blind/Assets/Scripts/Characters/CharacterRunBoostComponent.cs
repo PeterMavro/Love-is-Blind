@@ -30,9 +30,9 @@ public class CharacterRunBoostComponent : CooldownComponent
             OnBoostFinished?.Invoke();
     }
 
-    public override void Reset()
+    public override void DoReset()
     {
-        base.Reset();
+        base.DoReset();
 
         _duration = initDuration;
     }
