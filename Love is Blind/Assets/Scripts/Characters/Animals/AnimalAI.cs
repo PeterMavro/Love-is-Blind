@@ -8,6 +8,9 @@ public class AnimalAI : CharacterAI
     [Range(0, 360)]
     public int visionAngle;
     public LayerMask targetLayer;
+    [Header("Blocking")]
+    public LayerMask blockingLayer;
+    public float maxDistance;
     [Header("Patrol")]
     public WayPointsPath path;
     [MinMax(0, 10f)]
@@ -59,7 +62,8 @@ public class AnimalAI : CharacterAI
         {
             Patrol(deltaTime);
 
-            SearchTarget();
+            if (!CheckBlocking())
+                SearchTarget();
         }
     }
 
@@ -67,6 +71,16 @@ public class AnimalAI : CharacterAI
     {
         _patrolFinished = false;
         _currentPatrolPoint = 0;
+    }
+
+    public bool CheckBlocking()
+    {
+        Ray ray = new Ray(_animal.CatchedTransform.position, _animal.CatchedTransform.forward);
+
+        if (Physics.Raycast(ray, maxDistance, blockingLayer.value))
+            return true;
+
+        return false;
     }
 
     private void CheckAttack()
