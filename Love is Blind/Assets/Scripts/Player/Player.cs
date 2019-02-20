@@ -29,9 +29,16 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        _characterSwitchComponent.OnUpdate(Time.deltaTime);
+        var deltaTime = Time.deltaTime;
 
-        _characterRunBoostComponent.OnUpdate(Time.deltaTime);
+        _characterSwitchComponent.OnUpdate(deltaTime);
+
+        _characterRunBoostComponent.OnUpdate(deltaTime);
+
+        for (int i = 0; i < characters.Length; i++)
+        {
+            characters[i].OnUpdated(deltaTime);
+        }
     }
 
     /// <summary>

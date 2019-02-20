@@ -5,44 +5,43 @@ using UnityEngine.AI;
 public class CharacterAI : MonoBehaviour
 {
     [SerializeField]
-    private Transform _target;
-    private NavMeshAgent _agent;
+    protected Transform m_target;
+    protected NavMeshAgent m_agent;
 
-    private float _initSpeed;
+    protected float m_initSpeed;
 
-    public Transform Target { get => _target; set { _target = value; } }
+    public Transform Target { get => m_target; set { m_target = value; } }
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        _agent = GetComponent<NavMeshAgent>();
+        m_agent = GetComponent<NavMeshAgent>();
+
+        m_initSpeed = m_agent.speed;
     }
 
-    private void Start()
+    public virtual void OnUpdate(float deltaTime)
     {
-        _initSpeed = _agent.speed;
-    }
-
-    private void Update()
-    {
-        if (_target)
+        if (m_target && m_agent.enabled)
         {
-            _agent.SetDestination(_target.position);
+            m_agent.SetDestination(m_target.position);
         }
     }
 
     public void SetActive(bool active)
     {
-        if (!active)
+        if (m_agent.enabled)
         {
-            _agent.isStopped = active;
-            _agent.ResetPath();
+            m_agent.ResetPath();
+            m_agent.isStopped = !active;
         }
+
+        m_agent.enabled = active;
 
         enabled = active;
     }
 
     public void SetActiveRunBoost(bool active, float multiplier = 1f)
     {
-        _agent.speed = active ? _agent.speed * multiplier : _initSpeed;
+        m_agent.speed = active ? m_agent.speed * multiplier : m_initSpeed;
     }
 }

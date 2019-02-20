@@ -2,6 +2,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(RPGCharacterController))]
+[RequireComponent(typeof(CharacterAI))]
 public abstract class Character : MonoBehaviour, IHealthHandler
 {
     [Range(0, 100)]
@@ -13,13 +14,27 @@ public abstract class Character : MonoBehaviour, IHealthHandler
     private CharacterAI _characterAI;
 
     protected HealthComponent m_healthComponent;
+    protected HealthRegenerationComponent m_healthRegenerationComponent;
+    protected Transform m_catchedTransform;
 
-    private void Awake()
+    public Transform CatchedTransform => m_catchedTransform;
+
+    protected virtual void Awake()
     {
         _characterController = GetComponent<RPGCharacterController>();
         _characterAI = GetComponent<CharacterAI>();
 
+        m_healthRegenerationComponent = GetComponent<HealthRegenerationComponent>();
+
         m_healthComponent = new HealthComponent(maxHealth);
+
+        m_catchedTransform = transform;
+    }
+
+    protected virtual void Start()
+    {
+        if (m_healthRegenerationComponent)
+            m_healthRegenerationComponent.HealthComponent = m_healthComponent;
     }
 
     private void OnEnable()
@@ -30,6 +45,14 @@ public abstract class Character : MonoBehaviour, IHealthHandler
     private void OnDisable()
     {
         m_healthComponent.OnHealthChanged -= OnHealthChangedCallback;
+    }
+
+    public virtual void OnUpdated(float deltaTime)
+    {
+        _characterAI.OnUpdate(deltaTime);
+
+        if (m_healthRegenerationComponent)
+            m_healthRegenerationComponent.OnUpdate(deltaTime);
     }
 
     private void OnHealthChangedCallback(object sender, EventArgs args)
