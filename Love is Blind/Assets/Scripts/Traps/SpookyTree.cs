@@ -11,11 +11,14 @@ public class SpookyTree : MonoBehaviour
     public Vector2 minMaxfallProbabilityRate;
     [Range(0, 1f)]
     public float fallProbability;
+    public float fallForce;
 
+    [SerializeField]
     private List<Transform> _targetCandidates = new List<Transform>();
     private float _probabilityRateTimer;
     private Rigidbody _rigidbody;
     private Transform _catchedTransform;
+    private bool _fell = false;
 
     private void Awake()
     {
@@ -33,6 +36,8 @@ public class SpookyTree : MonoBehaviour
 
     public void OnUpdate(float deltaTime)
     {
+        if (_fell) return;
+
         if (_targetCandidates.Count > 0)
         {
             if (_probabilityRateTimer == 0)
@@ -44,6 +49,12 @@ public class SpookyTree : MonoBehaviour
                     _probabilityRateTimer = 0;
             }
         }
+    }
+
+    public void DoReset()
+    {
+        _fell = false;
+        _rigidbody.isKinematic = true;
     }
 
     private void CalculateFallProbability()
@@ -60,10 +71,15 @@ public class SpookyTree : MonoBehaviour
 
     private void FallOff()
     {
+        Debug.Log("FallOff");
+
         var rd = Random.Range(0, _targetCandidates.Count);
         var dir = _targetCandidates[rd].position - _catchedTransform.position;
 
-        _rigidbody.AddForceAtPosition(dir * 5f, treeTop.position);
+        _rigidbody.isKinematic = false;
+        _rigidbody.AddForceAtPosition(dir * fallForce, treeTop.position);
+
+        //_fell = true;
     }
 
     private void OnTriggerExit(Collider other)
