@@ -71,15 +71,13 @@ public class SpookyTree : MonoBehaviour
 
     private void FallOff()
     {
-        Debug.Log("FallOff");
-
         var rd = Random.Range(0, _targetCandidates.Count);
         var dir = _targetCandidates[rd].position - _catchedTransform.position;
 
         _rigidbody.isKinematic = false;
         _rigidbody.AddForceAtPosition(dir * fallForce, treeTop.position);
 
-        //_fell = true;
+        _fell = true;
     }
 
     private void OnTriggerExit(Collider other)
