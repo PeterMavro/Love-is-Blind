@@ -8,6 +8,10 @@ public class BlindBoy : Character
         base.Select();
 
         fogOfWarSystem.SetActive(true);
+
+        AnimalManager.Instance.ShowAnimals(true);
+
+        TreeManager.Instance.ChangeTreesToWireframeMaterial(true);
     }
 
     public override void Deselect()
@@ -15,5 +19,9 @@ public class BlindBoy : Character
         base.Deselect();
 
         fogOfWarSystem.SetActive(false);
+
+        AnimalManager.Instance.ShowAnimals(false);
+
+        TreeManager.Instance.ChangeTreesToWireframeMaterial(false);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AnimalManager : MonoBehaviour
+public class AnimalManager : Singleton<AnimalManager>
 {
     public Animal[] animals;
 
@@ -9,6 +9,14 @@ public class AnimalManager : MonoBehaviour
         for (int i = 0; i < animals.Length; i++)
         {
             animals[i].OnUpdated(Time.deltaTime);
+        }
+    }
+
+    public void ShowAnimals(bool show)
+    {
+        for (int i = 0; i < animals.Length; i++)
+        {
+            animals[i].RendererComponent.SetActive(show);
         }
     }
 }

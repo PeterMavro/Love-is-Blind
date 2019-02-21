@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class SpookyTree : MonoBehaviour
 {
+    public RendererComponent RendererComponent => _renderer;
+
     public LayerMask targetLayer;
     public Transform treeTop;
     [Tooltip("The time between each calculus of fall probability")]
@@ -13,21 +15,25 @@ public class SpookyTree : MonoBehaviour
     public float fallProbability;
     public float fallForce;
 
-    [SerializeField]
     private List<Transform> _targetCandidates = new List<Transform>();
     private float _probabilityRateTimer;
+    private bool _fell = false;
+
     private Rigidbody _rigidbody;
     private Transform _catchedTransform;
-    private bool _fell = false;
+    private RendererComponent _renderer;
 
     private void Awake()
     {
         _catchedTransform = transform;
         _rigidbody = GetComponent<Rigidbody>();
+        _renderer = GetComponent<RendererComponent>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (fallProbability == 0) return;
+
         if (((1 << other.gameObject.layer) & targetLayer.value) != 0)
         {
             _targetCandidates.Add(other.transform);
@@ -36,7 +42,7 @@ public class SpookyTree : MonoBehaviour
 
     public void OnUpdate(float deltaTime)
     {
-        if (_fell) return;
+        if (_fell || fallProbability == 0) return;
 
         if (_targetCandidates.Count > 0)
         {
@@ -82,6 +88,8 @@ public class SpookyTree : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (fallProbability == 0) return;
+
         if (((1 << other.gameObject.layer) & targetLayer.value) != 0)
         {
             _targetCandidates.Remove(other.transform);

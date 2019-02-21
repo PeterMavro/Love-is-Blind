@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    private static GameManager _instance;
-    public static GameManager Instance => _instance;
-
     public bool autoStartPlay = true;
 
     private GameState _gameState;
@@ -13,15 +10,9 @@ public class GameManager : MonoBehaviour
     public GameState GameState => _gameState;
     public GameResult GameResult => _gameResult;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (_instance != null)
-        {
-            DestroyImmediate(this);
-            return;
-        }
-
-        _instance = this;
+        base.Awake();
 
         _gameState = GameState.Ready;
     }
