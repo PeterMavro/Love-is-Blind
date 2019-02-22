@@ -16,6 +16,16 @@ public class Animal : Character
         _renderer = GetComponent<RendererComponent>();
     }
 
+    private void OnEnable()
+    {
+        AnimalManager.Instance.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        AnimalManager.Instance.Remove(this);
+    }
+
     protected override void Start()
     {
         base.Start();

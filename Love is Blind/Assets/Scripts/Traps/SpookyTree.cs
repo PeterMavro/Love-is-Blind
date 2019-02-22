@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 public class SpookyTree : MonoBehaviour
 {
+    public static event Action<SpookyTree> OnTreeIsGoingToFall;
+    public static event Action<SpookyTree> OnTreeCompleteFell;
+
     public RendererComponent RendererComponent => _renderer;
 
     public LayerMask targetLayer;
@@ -14,6 +18,8 @@ public class SpookyTree : MonoBehaviour
     [Range(0, 1f)]
     public float fallProbability;
     public float fallForce;
+    [Tooltip("The time to wait after fall to reset the tree to the isKinematic true state")]
+    public float fallTimeToResetKinematic = 4f;
 
     private List<Transform> _targetCandidates = new List<Transform>();
     private float _probabilityRateTimer;
@@ -30,6 +36,16 @@ public class SpookyTree : MonoBehaviour
         _renderer = GetComponent<RendererComponent>();
     }
 
+    private void OnEnable()
+    {
+        TreeManager.Instance.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        TreeManager.Instance.Remove(this);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (fallProbability == 0) return;
@@ -37,6 +53,17 @@ public class SpookyTree : MonoBehaviour
         if (((1 << other.gameObject.layer) & targetLayer.value) != 0)
         {
             _targetCandidates.Add(other.transform);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (fallProbability == 0) return;
+
+        if (((1 << collision.gameObject.layer) & targetLayer.value) != 0)
+        {
+            PlayerManager.Instance.localPlayer.SetCharacterInputActive(false);
+            PlayerManager.Instance.localPlayer.SendGameOver(GameResult.Lose);
         }
     }
 
@@ -60,30 +87,42 @@ public class SpookyTree : MonoBehaviour
     public void DoReset()
     {
         _fell = false;
-        _rigidbody.isKinematic = true;
+
+        ResetStaticTree();
     }
 
     private void CalculateFallProbability()
     {
-        var d = Random.value;
+        var d = UnityEngine.Random.value;
 
         if (d < fallProbability)
         {
+            OnTreeIsGoingToFall?.Invoke(this);
+
             FallOff();
         }
 
-        _probabilityRateTimer = Random.Range(minMaxfallProbabilityRate.x, minMaxfallProbabilityRate.y);
+        _probabilityRateTimer = UnityEngine.Random.Range(minMaxfallProbabilityRate.x, minMaxfallProbabilityRate.y);
     }
 
     private void FallOff()
     {
-        var rd = Random.Range(0, _targetCandidates.Count);
+        var rd = UnityEngine.Random.Range(0, _targetCandidates.Count);
         var dir = _targetCandidates[rd].position - _catchedTransform.position;
 
         _rigidbody.isKinematic = false;
         _rigidbody.AddForceAtPosition(dir * fallForce, treeTop.position);
 
         _fell = true;
+
+        Invoke("ResetStaticTree", fallTimeToResetKinematic);
+    }
+
+    private void ResetStaticTree()
+    {
+        _rigidbody.isKinematic = true;
+
+        OnTreeCompleteFell?.Invoke(this);
     }
 
     private void OnTriggerExit(Collider other)
@@ -94,5 +133,10 @@ public class SpookyTree : MonoBehaviour
         {
             _targetCandidates.Remove(other.transform);
         }
+    }
+
+    public void ChangeMaterial(bool wireframe)
+    {
+        _renderer.ChangeMaterial(wireframe ? 1 : 0);
     }
 }

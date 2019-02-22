@@ -2,7 +2,10 @@
 
 public class GameManager : Singleton<GameManager>
 {
+    public static bool GameIsPaused => Instance.GameState == GameState.Pause || Instance.GameState == GameState.GameOver;
+
     public bool autoStartPlay = true;
+    public GameOverMenu gameOverMenu;
 
     private GameState _gameState;
     private GameResult _gameResult;
@@ -26,23 +29,25 @@ public class GameManager : Singleton<GameManager>
     public void Play()
     {
         _gameState = GameState.Playing;
+
+        Time.timeScale = 1f;
+
+        gameOverMenu.HideUI();
     }
 
     public void Pause()
     {
         _gameState = GameState.Pause;
+
+        Time.timeScale = 0f;
     }
 
-    public void GameOver()
+    public void GameOver(GameResult result)
     {
+        _gameResult = result;
         _gameState = GameState.GameOver;
 
-        CheckResult();
-    }
-
-    private void CheckResult()
-    {
-
+        gameOverMenu.ShowUI(result);
     }
 }
 
