@@ -8,12 +8,16 @@ public class BlindBoy : Character
 
     protected override void OnEnable()
     {
+        base.OnEnable();
+
         SpookyTree.OnTreeIsGoingToFall += OnTreeIsGoingToFall;
         SpookyTree.OnTreeCompleteFell += OnTreeCompleteFell;
     }
 
     protected override void OnDisable()
     {
+        base.OnDisable();
+
         SpookyTree.OnTreeIsGoingToFall -= OnTreeIsGoingToFall;
         SpookyTree.OnTreeCompleteFell -= OnTreeCompleteFell;
     }
