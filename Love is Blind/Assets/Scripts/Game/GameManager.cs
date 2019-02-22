@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    private static GameManager _instance;
-    public static GameManager Instance => _instance;
+    public static bool GameIsPaused => Instance.GameState == GameState.Pause || Instance.GameState == GameState.GameOver;
 
     public bool autoStartPlay = true;
+    public GameOverMenu gameOverMenu;
 
     private GameState _gameState;
     private GameResult _gameResult;
@@ -13,15 +13,9 @@ public class GameManager : MonoBehaviour
     public GameState GameState => _gameState;
     public GameResult GameResult => _gameResult;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (_instance != null)
-        {
-            DestroyImmediate(this);
-            return;
-        }
-
-        _instance = this;
+        base.Awake();
 
         _gameState = GameState.Ready;
     }
@@ -35,23 +29,25 @@ public class GameManager : MonoBehaviour
     public void Play()
     {
         _gameState = GameState.Playing;
+
+        Time.timeScale = 1f;
+
+        gameOverMenu.HideUI();
     }
 
     public void Pause()
     {
         _gameState = GameState.Pause;
+
+        Time.timeScale = 0f;
     }
 
-    public void GameOver()
+    public void GameOver(GameResult result)
     {
+        _gameResult = result;
         _gameState = GameState.GameOver;
 
-        CheckResult();
-    }
-
-    private void CheckResult()
-    {
-
+        gameOverMenu.ShowUI(result);
     }
 }
 

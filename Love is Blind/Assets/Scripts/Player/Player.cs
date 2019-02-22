@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, ISendGameOver
 {
     public CharacterType selectedCharacterAtStart;
     [Tooltip("Keep as: First: BlindBoy. Second: DeafGirl")]
@@ -12,19 +12,30 @@ public class Player : MonoBehaviour
 
     private CharacterSwitchComponent _characterSwitchComponent;
     private CharacterRunBoostComponent _characterRunBoostComponent;
+    private PlayerInput _input;
 
+    #region Unity methods
     private void Awake()
     {
         _characterSwitchComponent = GetComponent<CharacterSwitchComponent>();
         _characterRunBoostComponent = GetComponent<CharacterRunBoostComponent>();
+        _input = GetComponent<PlayerInput>();
+    }
+
+    private void OnEnable()
+    {
+        PlayerManager.Instance.localPlayer = this;
+    }
+
+    private void OnDisable()
+    {
+        if (PlayerManager.Instance.localPlayer == this)
+            PlayerManager.Instance.localPlayer = null;
     }
 
     private void Start()
     {
-        _selectedCharacterIdx = (selectedCharacterAtStart == 0 ? 1 : 0);
-
-        /* Switch to the selected character (generates SwitchCharacter cooldown) */
-        SwitchCharacter();
+        Initialize();
     }
 
     private void Update()
@@ -40,7 +51,28 @@ public class Player : MonoBehaviour
             characters[i].OnUpdated(deltaTime);
         }
     }
+    #endregion
 
+    #region Init and components methods
+    public void Initialize()
+    {
+        SetActiveInput(true);
+
+        cameraController.enabled = true;
+
+        _selectedCharacterIdx = (selectedCharacterAtStart == 0 ? 1 : 0);
+
+        /* Switch to the selected character (generates SwitchCharacter cooldown) */
+        SwitchCharacter();
+    }
+
+    public void SetActiveInput(bool active)
+    {
+        _input.enabled = active;
+    }
+    #endregion
+
+    #region SwitchCharacter methods
     /// <summary>
     /// Switch between two character only
     /// </summary>
@@ -78,6 +110,13 @@ public class Player : MonoBehaviour
         cameraController.target = characters[_selectedCharacterIdx].transform;
     }
 
+    public void SetCharacterInputActive(bool active)
+    {
+        characters[_selectedCharacterIdx].SetInputActive(active);
+    }
+    #endregion
+
+    #region RunBoost methods
     public void ActiveRunBoost()
     {
         if (_characterRunBoostComponent.Cooldown > 0) return;
@@ -96,6 +135,16 @@ public class Player : MonoBehaviour
         {
             characters[i].DesactiveRunBoost();
         }
+    }
+    #endregion
+
+    public void SendGameOver(GameResult result)
+    {
+        cameraController.enabled = false;
+
+        SetActiveInput(false);
+
+        GameManager.Instance.GameOver(result);
     }
 
     public enum CharacterType

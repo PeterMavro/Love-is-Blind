@@ -30,9 +30,7 @@ public class RPGCharacterController : MonoBehaviour
 
     public void SetInputActive(bool active)
     {
-        _controller.enabled = active;
         _input.enabled = active;
-        enabled = active;
     }
 
     public void SetActiveRunBoost(bool active, float multiplier = 1f)

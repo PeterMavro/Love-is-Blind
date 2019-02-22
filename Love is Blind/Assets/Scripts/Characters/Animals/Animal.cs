@@ -3,18 +3,33 @@
 public class Animal : Character
 {
     private BiteComponent _biteComponent;
+    private RendererComponent _renderer;
 
     public BiteComponent BiteComponent => _biteComponent;
+    public RendererComponent RendererComponent => _renderer;
 
     protected override void Awake()
     {
         base.Awake();
 
         _biteComponent = GetComponent<BiteComponent>();
+        _renderer = GetComponent<RendererComponent>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
+        AnimalManager.Instance.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        AnimalManager.Instance.Remove(this);
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
         Deselect();
     }
 

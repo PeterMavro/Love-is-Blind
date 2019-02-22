@@ -18,6 +18,7 @@ public class AnimalAI : CharacterAI
     public PatrolFollowLoop followLoop;
 
     Animal _animal;
+    [SerializeField]
     List<Transform> _targetCandidates = new List<Transform>();
     int _currentPatrolPoint = 0;
     float _waitTimer;
