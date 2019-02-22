@@ -6,13 +6,13 @@ public class BlindBoy : Character
 
     private List<SpookyTree> _fallingTrees = new List<SpookyTree>();
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         SpookyTree.OnTreeIsGoingToFall += OnTreeIsGoingToFall;
         SpookyTree.OnTreeCompleteFell += OnTreeCompleteFell;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         SpookyTree.OnTreeIsGoingToFall -= OnTreeIsGoingToFall;
         SpookyTree.OnTreeCompleteFell -= OnTreeCompleteFell;

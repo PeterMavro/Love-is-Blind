@@ -39,12 +39,12 @@ public abstract class Character : MonoBehaviour, IHealthHandler
             m_healthRegenerationComponent.HealthComponent = m_healthComponent;
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         m_healthComponent.OnHealthChanged += OnHealthChangedCallback;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         m_healthComponent.OnHealthChanged -= OnHealthChangedCallback;
     }
