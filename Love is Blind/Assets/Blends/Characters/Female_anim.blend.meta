@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5ce80fce5c3b1264a98b5d37f3418698
+guid: 9e1d2b768bf3efe4db68b608611f6eb7
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -74,6 +74,9 @@ ModelImporter:
     7400004: Walk
     7400006: GetHit
     7400008: Faint
+    7400010: Faint_2
+    7400012: Idle_2
+    7400014: Walk_2
     9500000: //RootNode
     13700000: man
     2186277476908879412: ImportLogs
@@ -134,8 +137,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Faint
-      takeName: Faint
+      name: Faint_2
+      takeName: Faint_2
       firstFrame: 0
       lastFrame: 30
       wrapMode: 0
@@ -190,8 +193,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Idle
-      takeName: Idle
+      name: Idle_2
+      takeName: Idle_2
       firstFrame: 0
       lastFrame: 100
       wrapMode: 0
@@ -218,8 +221,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Walk
-      takeName: Walk
+      name: Walk_2
+      takeName: Walk_2
       firstFrame: 0
       lastFrame: 30
       wrapMode: 0
