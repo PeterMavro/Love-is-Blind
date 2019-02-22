@@ -3,17 +3,15 @@ using UnityEngine;
 
 public class TreeManager : Singleton<TreeManager>
 {
-    public SpookyTree[] trees;
-
     [SerializeField]
     private List<SpookyTree> _trees = new List<SpookyTree>();
 
     private void Update()
     {
         var deltaTime = Time.deltaTime;
-        for (int i = 0; i < trees.Length; i++)
+        for (int i = 0; i < _trees.Count; i++)
         {
-            trees[i].OnUpdate(deltaTime);
+            _trees[i].OnUpdate(deltaTime);
         }
     }
 
@@ -30,10 +28,10 @@ public class TreeManager : Singleton<TreeManager>
 
     public void ChangeTreesToWireframeMaterial(bool wireframe)
     {
-        for (int i = 0; i < trees.Length; i++)
+        for (int i = 0; i < _trees.Count; i++)
         {
-            if (trees[i].fallProbability > 0)
-                trees[i].RendererComponent.ChangeMaterial(wireframe ? 1 : 0);
+            if (_trees[i].fallProbability > 0)
+                _trees[i].RendererComponent.ChangeMaterial(wireframe ? 1 : 0);
         }
     }
 }
