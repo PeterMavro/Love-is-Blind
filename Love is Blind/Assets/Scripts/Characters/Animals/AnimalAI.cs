@@ -104,7 +104,10 @@ public class AnimalAI : CharacterAI
 
     private void Patrol(float deltaTime)
     {
-        if (path.wayPoints.Length <= 1) return;
+        if (path.wayPoints.Length <= 1)
+        {
+            return;
+        }
 
         if (_waitTimer == 0)
         {
