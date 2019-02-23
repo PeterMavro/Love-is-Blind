@@ -7,6 +7,7 @@ public class Player : MonoBehaviour, ISendGameOver
     [Tooltip("Keep as: First: BlindBoy. Second: DeafGirl")]
     public Character[] characters;
     public CameraController cameraController;
+    public CharacterHUD characterHUD;
 
     private int _selectedCharacterIdx = 0;
 
@@ -97,6 +98,9 @@ public class Player : MonoBehaviour, ISendGameOver
 
     private void SelectCharacter()
     {
+        if (characterHUD)
+            characterHUD.SetActive(_selectedCharacterIdx);
+
         characters[_selectedCharacterIdx].Select();
     }
 
