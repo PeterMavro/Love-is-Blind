@@ -62,6 +62,8 @@ public class SpookyTree : MonoBehaviour
 
         if (((1 << collision.gameObject.layer) & targetLayer.value) != 0)
         {
+            collision.gameObject.GetComponent<Character>().Damage(100);
+
             PlayerManager.Instance.localPlayer.SetCharacterInputActive(false);
             PlayerManager.Instance.localPlayer.SendGameOver(GameResult.Lose);
         }

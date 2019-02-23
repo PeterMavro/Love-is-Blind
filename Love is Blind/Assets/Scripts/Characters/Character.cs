@@ -12,11 +12,12 @@ public abstract class Character : MonoBehaviour, IHealthHandler
     public UnityEvents.FloatUnityEvent OnHealthChanged;
 
     private RPGCharacterController _characterController;
-    private CharacterAI _characterAI;
 
+    protected CharacterAI m_characterAI;
     protected HealthComponent m_healthComponent;
     protected HealthRegenerationComponent m_healthRegenerationComponent;
     protected Transform m_catchedTransform;
+    protected CharacterAnimator m_animator;
     protected bool m_selected;
 
     public Transform CatchedTransform => m_catchedTransform;
@@ -24,7 +25,8 @@ public abstract class Character : MonoBehaviour, IHealthHandler
     protected virtual void Awake()
     {
         _characterController = GetComponent<RPGCharacterController>();
-        _characterAI = GetComponent<CharacterAI>();
+        m_characterAI = GetComponent<CharacterAI>();
+        m_animator = GetComponent<CharacterAnimator>();
 
         m_healthRegenerationComponent = GetComponent<HealthRegenerationComponent>();
 
@@ -51,7 +53,9 @@ public abstract class Character : MonoBehaviour, IHealthHandler
 
     public virtual void OnUpdated(float deltaTime)
     {
-        _characterAI.OnUpdate(deltaTime);
+        m_characterAI.OnUpdate(deltaTime);
+
+        m_animator.OnUpdate(deltaTime);
 
         if (m_healthRegenerationComponent)
             m_healthRegenerationComponent.OnUpdate(deltaTime);
@@ -74,7 +78,9 @@ public abstract class Character : MonoBehaviour, IHealthHandler
 
         _characterController.SetInputActive(true);
 
-        _characterAI.SetActive(false);
+        m_animator.Mover = MoverType.CharacterController;
+
+        m_characterAI.SetActive(false);
     }
 
     public virtual void Deselect()
@@ -83,7 +89,9 @@ public abstract class Character : MonoBehaviour, IHealthHandler
 
         _characterController.SetInputActive(false);
 
-        _characterAI.SetActive(true);
+        m_animator.Mover = MoverType.NavMeshAgent;
+
+        m_characterAI.SetActive(true);
     }
 
     /// <summary>
@@ -98,13 +106,13 @@ public abstract class Character : MonoBehaviour, IHealthHandler
     public virtual void ActiveRunBoost(float multiplier)
     {
         _characterController.SetActiveRunBoost(true, multiplier);
-        _characterAI.SetActiveRunBoost(true, multiplier);
+        m_characterAI.SetActiveRunBoost(true, multiplier);
     }
 
     public virtual void DesactiveRunBoost()
     {
         _characterController.SetActiveRunBoost(false);
-        _characterAI.SetActiveRunBoost(false);
+        m_characterAI.SetActiveRunBoost(false);
     }
 
     #region IHealthHandler methods

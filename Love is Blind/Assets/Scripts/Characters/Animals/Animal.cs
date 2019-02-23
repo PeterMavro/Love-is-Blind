@@ -16,12 +16,12 @@ public class Animal : Character
         _renderer = GetComponent<RendererComponent>();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         AnimalManager.Instance.Add(this);
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         AnimalManager.Instance.Remove(this);
     }
@@ -35,7 +35,12 @@ public class Animal : Character
 
     public override void OnUpdated(float deltaTime)
     {
-        base.OnUpdated(deltaTime);
+        m_characterAI.OnUpdate(deltaTime);
+
+        //m_animator.OnUpdate(deltaTime);
+
+        if (m_healthRegenerationComponent)
+            m_healthRegenerationComponent.OnUpdate(deltaTime);
 
         _biteComponent.OnUpdate(deltaTime);
     }
