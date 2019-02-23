@@ -6,6 +6,7 @@ public class CharacterRunBoostComponent : CooldownComponent
     public float initDuration;
     [Range(0f, 5f)]
     public float boostMultiplier;
+    public UnityEvent OnBoostStarted;
     public UnityEvents.FloatUnityEvent OnDurationUpdated;
     public UnityEvent OnBoostFinished;
 
@@ -35,5 +36,7 @@ public class CharacterRunBoostComponent : CooldownComponent
         base.DoReset();
 
         _duration = initDuration;
+
+        OnBoostStarted?.Invoke();
     }
 }

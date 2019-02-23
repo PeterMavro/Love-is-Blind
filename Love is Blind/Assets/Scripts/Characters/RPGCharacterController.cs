@@ -11,11 +11,14 @@ public class RPGCharacterController : MonoBehaviour
 
     private CharacterController _controller;
     private RPGCharacterControllerInput _input;
+    private Transform _catchedTransform;
 
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<RPGCharacterControllerInput>();
+
+        _catchedTransform = transform;
     }
 
     private void Start()
@@ -25,6 +28,9 @@ public class RPGCharacterController : MonoBehaviour
 
     public void Move(Vector3 dir)
     {
+        if (dir != Vector3.zero)
+            _catchedTransform.rotation = Quaternion.Slerp(_catchedTransform.rotation, Quaternion.LookRotation(dir), 10f * Time.deltaTime);
+
         _controller.SimpleMove(_speed * dir);
     }
 
