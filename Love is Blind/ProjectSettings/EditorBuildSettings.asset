@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/Main Menu.unity
+    guid: 8ceb7a13dd4a14e5da0571f18a0e8f14
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/MayanForest.unity
+    guid: b39847cf186c08049898195477dce91d
   m_configObjects: {}
